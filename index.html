@@ -3,67 +3,66 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Rugwatch · Pump.fun cluster & rug scanner</title>
+<title>Rugwatch · Cyberpunk Edition</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#e8edf2;--panel:#f7f9fb;--ink:#17202b;--mute:#5d6b7a;--line:#c9d3dd;--red:#c4372c;--amber:#b7791f;--teal:#1d7a6c;--blue:#2a5fa8}
+:root{--bg:#05050a;--panel:#0b0b16;--ink:#00ffcc;--mute:#ff007f;--line:#1a1a3a;--red:#ff2a6d;--amber:#f4eeff;--teal:#05d9e8;--blue:#00ffcc;--neon-glow:0 0 10px rgba(0,255,204,0.3)}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "IBM Plex Sans",system-ui,sans-serif;padding:max(14px,env(safe-area-inset-top)) 14px max(24px,env(safe-area-inset-bottom))}
+body{margin:0;background:var(--bg);color:#e0e0e8;font:15px/1.5 "Share Tech Mono",monospace;padding:max(14px,env(safe-area-inset-top)) 14px max(24px,env(safe-area-inset-bottom))}
 main{max-width:960px;margin:0 auto}
-h1{font-size:26px;margin:6px 0 2px;letter-spacing:-.01em}
-h2{font-size:17px;margin:16px 0 6px}
+h1{font-family:"Orbitron",sans-serif;font-size:28px;margin:6px 0 2px;letter-spacing:2px;color:var(--teal);text-shadow:0 0 10px rgba(5,217,232,0.5)}
+h2{font-family:"Orbitron",sans-serif;font-size:16px;margin:16px 0 6px;color:var(--teal);letter-spacing:1px}
 h2:first-child{margin-top:0}
-.sub{color:var(--mute);margin:0 0 16px}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px;margin-bottom:12px}
-label{display:block;font-weight:500;margin-bottom:4px}
-input[type=text],input[type=password],input[type=datetime-local],select{width:100%;padding:10px;border:1px solid var(--line);border-radius:4px;background:#fff;color:var(--ink);font:14px "IBM Plex Mono",monospace}
+.sub{color:#8a8ab0;margin:0 0 16px;font-size:14px}
+.panel{background:var(--panel);border:1px solid var(--teal);border-radius:4px;padding:14px;margin-bottom:12px;box-shadow:0 0 15px rgba(5,217,232,0.1)}
+label{display:block;font-family:"Orbitron",sans-serif;font-size:12px;font-weight:600;margin-bottom:4px;color:var(--teal);letter-spacing:1px}
+input[type=text],input[type=password],input[type=datetime-local],select{width:100%;padding:10px;border:1px solid var(--teal);border-radius:2px;background:#030308;color:#00ffcc;font:14px "Share Tech Mono",monospace;box-shadow:inset 0 0 5px rgba(5,217,232,0.2)}
 .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
-button{font:500 14px "IBM Plex Sans",sans-serif;padding:10px 14px;border-radius:4px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer}
-button.ghost{background:transparent;color:var(--ink)}
-button.sm{padding:4px 9px;font-size:13px}
-button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
-button:disabled{opacity:.5}
-#log{color:var(--mute);font-size:13px;min-height:20px;margin:8px 0 0}
+button{font-family:"Orbitron",sans-serif;font-weight:600;font-size:13px;padding:10px 14px;border-radius:2px;border:1px solid var(--teal);background:#030308;color:var(--teal);cursor:pointer;text-shadow:0 0 5px rgba(5,217,232,0.5);box-shadow:0 0 10px rgba(5,217,232,0.2);transition:all 0.2s}
+button:hover{background:var(--teal);color:#030308;box-shadow:0 0 15px var(--teal)}
+button.ghost{background:transparent;color:var(--mute);border-color:var(--mute);box-shadow:0 0 10px rgba(255,0,127,0.2)}
+button.ghost:hover{background:var(--mute);color:#030308;box-shadow:0 0 15px var(--mute)}
+button.sm{padding:4px 9px;font-size:11px}
+button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+button:disabled{opacity:.4;cursor:not-allowed}
+#log{color:var(--teal);font-size:13px;min-height:20px;margin:8px 0 0;text-shadow:0 0 5px rgba(5,217,232,0.3)}
 .score{display:flex;align-items:baseline;gap:12px;margin-bottom:6px}
 .score b{font-size:44px;line-height:1}
-.hi{color:var(--red)}.md{color:var(--amber)}.lo{color:var(--teal)}
+.hi{color:var(--red);text-shadow:0 0 5px rgba(255,42,109,0.5)}
+.md{color:#ffbd00;text-shadow:0 0 5px rgba(255,189,0,0.5)}
+.lo{color:var(--teal);text-shadow:0 0 5px rgba(5,217,232,0.5)}
 .flags{display:grid;gap:6px;margin:8px 0}
-.flag{border-left:3px solid currentColor;padding:2px 10px;font-size:14px}
-.flag span{color:var(--ink)}
+.flag{border-left:3px solid currentColor;padding:2px 10px;font-size:14px;background:rgba(255,255,255,0.02)}
+.flag span{color:#e0e0e8}
 .tbl{overflow-x:auto}
 table{border-collapse:collapse;width:100%;font-size:13px}
 th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
-th{color:var(--mute);font-weight:500}
-.mono,td a{font-family:"IBM Plex Mono",monospace}
-a{color:var(--blue)}
-.star{background:none;border:none;color:var(--amber);padding:0 4px;font-size:16px}
-.note{font-size:13px;color:var(--mute)}
-.tag{background:#e3e9ef;border-radius:3px;padding:1px 6px;font-size:12px;margin-left:4px}
-.tag.r{background:#f6d9d6;color:var(--red)}
+th{color:var(--teal);font-family:"Orbitron",sans-serif;font-weight:600;font-size:11px;letter-spacing:1px}
+.mono,td a{font-family:"Share Tech Mono",monospace}
+a{color:var(--teal);text-decoration:none;text-shadow:0 0 5px rgba(5,217,232,0.3)}
+a:hover{text-decoration:underline}
+.star{background:none;border:none;color:#ffbd00;padding:0 4px;font-size:16px;cursor:pointer;text-shadow:0 0 5px rgba(255,189,0,0.5)}
+.note{font-size:13px;color:#8a8ab0}
+.tag{background:rgba(5,217,232,0.1);border:1px solid var(--teal);border-radius:2px;padding:1px 6px;font-size:11px;margin-left:4px;color:var(--teal)}
+.tag.r{background:rgba(255,42,109,0.1);border-color:var(--red);color:var(--red)}
 .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;margin:10px 0}
-.fact{border:1px solid var(--line);border-radius:4px;padding:8px 10px;background:#fff}
-.fact b{display:block;font-size:18px}
-.fact span{font-size:12px;color:var(--mute)}
-.banner{padding:12px 14px;border-radius:4px;color:#fff;margin-bottom:10px}
-.banner b{display:block;font-size:24px;letter-spacing:.01em}
-.banner span{font-size:14px}
-.danger{border:1px solid var(--red);border-radius:4px;padding:8px 10px;margin-bottom:8px;background:#fff}
+.fact{border:1px solid var(--line);border-radius:2px;padding:8px 10px;background:#030308;box-shadow:inset 0 0 5px rgba(0,0,0,0.5)}
+.fact b{display:block;font-size:18px;color:var(--teal);font-family:"Orbitron",sans-serif}
+.fact span{font-size:12px;color:#8a8ab0}
+.banner{padding:12px 14px;border-radius:2px;color:#fff;margin-bottom:10px;border:1px solid}
+.banner b{display:block;font-family:"Orbitron",sans-serif;font-size:22px;letter-spacing:1px}
+.banner span{font-size:13px}
+.danger{border:1px solid var(--red);border-radius:2px;padding:8px 10px;margin-bottom:8px;background:#030308;box-shadow:0 0 10px rgba(255,42,109,0.2)}
 .danger p{margin:0 0 4px}
-.cl{border:1px solid var(--line);border-radius:4px;padding:10px;margin-bottom:10px;background:#fff}
+.cl{border:1px solid var(--line);border-radius:2px;padding:10px;margin-bottom:10px;background:#030308}
 .cl p{margin:0 0 6px}
 </style>
 </head>
 <body>
 <main>
-<h1>Rugwatch</h1>
+<h1>RUGWATCH // CYBER</h1>
 <p class="sub">Find the wallets behind Pump.fun rugs: funding clusters, repeat crews, and what happens to price after they sell.</p>
-
-<section class="panel">
-  <label for="key">Helius API key</label>
-  <input id="key" type="password" placeholder="Paste your free key from helius.dev" autocomplete="off">
-  <p class="note" style="margin-bottom:0">Stored only in this browser. Requests go straight from your device to Helius, DexScreener and GeckoTerminal.</p>
-</section>
 
 <section class="panel">
   <label for="addr">Token contract address (CA) or wallet address</label>
@@ -76,7 +75,7 @@ a{color:var(--blue)}
   <div class="row">
     <button id="bT">Scan token</button>
     <button id="bW">Scan wallet</button>
-    <label for="depth" style="margin:0 0 0 6px;font-weight:400">Trades to read</label>
+    <label for="depth" style="margin:0 0 0 6px;font-weight:400;color:var(--teal);font-family:'Orbitron',sans-serif;font-size:11px">Trades to read</label>
     <select id="depth" style="width:auto">
       <option value="200">First 200</option>
       <option value="400" selected>First 400</option>
@@ -112,10 +111,10 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",
 const log=m=>{$("#log").textContent=m};
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const median=a=>{const s=[...a].sort((x,y)=>x-y);return s.length?s[Math.floor(s.length/2)]:null};
-let KEY=localStorage.getItem("rw_key")||"";
+
+// Helius API key koda gömüldü
+let KEY="d2e2d5ea-fb59-4d24-8894-a8f65a4d63f9";
 let scanId=0;
-$("#key").value=KEY;
-$("#key").addEventListener("change",e=>{KEY=e.target.value.trim();localStorage.setItem("rw_key",KEY)});
 
 /* ---------- Case file ---------- */
 const getWL=()=>{try{return JSON.parse(localStorage.getItem("rw_wl")||"[]")}catch{return[]}};
@@ -183,7 +182,6 @@ async function walletTxs(addr,pages){
 const isPump=t=>t.source==="PUMP_FUN"||(t.instructions||[]).some(i=>i.programId===PUMP);
 const solDelta=(t,a)=>((t.accountData||[]).find(x=>x.account===a)||{}).nativeBalanceChange||0;
 
-/* One row per transaction where the fee payer moved this token: signed SOL (lamports) and signed token amount */
 function tradeRows(txs,mint){
   const rows=[];
   for(const t of txs){
@@ -218,12 +216,13 @@ function shell(id,kind,body){
 function verdict(score,flags,o={}){
   score=Math.min(100,Math.round(score));
   const lvl=score>=50?"danger":score>=25?"caution":"safe";
-  const bg={danger:"#c4372c",caution:"#b7791f",safe:"#1d7a6c"}[lvl];
+  const bg={danger:"rgba(255,42,109,0.15)",caution:"rgba(255,189,0,0.15)",safe:"rgba(5,217,232,0.15)"}[lvl];
+  const border={danger:"var(--red)",caution:"#ffbd00",safe:"var(--teal)"}[lvl];
   const title={danger:o.kind==="wallet"?"DANGER WALLET":"DANGER — RUG PATTERN",caution:"CAUTION",safe:"SAFE"}[lvl];
   const sub={danger:"Strong rug or insider pattern. Stay away from this wallet and its crew.",caution:"Some warning signs. Read the flags before you trust it.",safe:"No rug pattern found in the data we checked. This is not a guarantee."}[lvl];
   const who=lvl==="danger"&&o.main?`<div class="danger"><p><b>Danger wallet</b> ${link(o.main)}</p>${o.linked&&o.linked.length?`<p><b>Linked wallets</b> ${o.linked.map(w=>link(w)).join(" ")}</p>`:""}<div class="row"><button class="ghost sm" data-all="${[o.main,...(o.linked||[])].join(",")}" data-note="danger: ${esc(o.note||"")}">Add all to case file</button></div></div>`:"";
-  $("#verdict").innerHTML=`<div class="banner" style="background:${bg}"><b>${title}</b><span>${sub} Score ${score}/100.</span></div>${who}
-  <div class="flags">${flags.length?flags.map(f=>`<div class="flag ${f[2]}"><span><b>${esc(f[0])}.</b> ${esc(f[1])}</span></div>`).join(""):'<span class="note">No red flags in the data we checked.</span>'}</div>`;
+  $("#verdict").innerHTML=`<div class="banner" style="background:${bg};border-color:${border}"><b>${title}</b><span>${sub} Score ${score}/100.</span></div>${who}
+  <div class="flags">${flags.length?flags.map(f=>`<div class="flag ${f[2]}"><span><b>${esc(f[0])}.</b>${esc(f[1])}</span></div>`).join(""):'<span class="note">No red flags in the data we checked.</span>'}</div>`;
 }
 
 /* ================= TOKEN SCAN ================= */
@@ -240,7 +239,6 @@ async function scanToken(mint){
   const creator=txs[0].feePayer,s0=txs[0].slot,t0=txs[0].timestamp;
   const rows=tradeRows(txs,mint);
 
-  /* per-wallet book */
   const W={};
   for(const r of rows){
     const o=W[r.w]??={w:r.w,spent:0,got:0,bought:0,sold:0,slot:r.slot-s0,sells:[],firstBuy:null};
@@ -251,7 +249,6 @@ async function scanToken(mint){
   const traders=Object.values(W);
   const bundled=traders.filter(x=>x.slot<=1&&x.w!==creator&&x.bought>0);
 
-  /* funding trace: creator, launch-slot buyers, then biggest buyers */
   const profit=traders.filter(x=>x.w!==creator&&!callers.includes(x.w)).sort((a,b)=>(b.got-b.spent)-(a.got-a.spent)).slice(0,6).map(x=>x.w);
   const rest=traders.filter(x=>x.w!==creator).sort((a,b)=>((b.slot<=1)-(a.slot<=1))||b.spent-a.spent).map(x=>x.w);
   const cand=[...new Set([...callers,creator,...profit,...rest])].slice(0,22);
@@ -322,7 +319,6 @@ async function scanToken(mint){
   const wl=new Set(getWL().map(x=>x.addr));
   const wlHits=traders.filter(x=>wl.has(x.w)).map(x=>x.w);
 
-  /* money flow: insiders vs everyone else */
   const net=x=>x.got-x.spent;
   const ins=traders.filter(x=>insiders.has(x.w)),out=traders.filter(x=>!insiders.has(x.w));
   const insiderNet=ins.reduce((a,x)=>a+net(x),0),outsiderNet=out.reduce((a,x)=>a+net(x),0);
@@ -336,7 +332,6 @@ async function scanToken(mint){
     call={pre:pre.length,fr,frIns,frNet:fr.reduce((a,x)=>a+net(x),0),callerSold,outside:callT<t0||callT>lastT};
   }
 
-  /* price series from on-chain trades (ignore dust trades, they distort price) */
   const px=rows.filter(r=>Math.abs(r.sol)>=0.02*LAM&&r.tok).map(r=>({t:r.t,p:Math.abs(r.sol)/LAM/Math.abs(r.tok)})).sort((a,b)=>a.t-b.t);
   let peak=null,toPeak=null,peakToCrash=null,exitT=null,exitVsPeak=null,crashAfterExit=null,drawdown=null;
   if(px.length>3){
@@ -353,7 +348,6 @@ async function scanToken(mint){
     }
   }
 
-  /* holders */
   log("Checking holders…");
   let holders=[];
   try{
@@ -365,7 +359,6 @@ async function scanToken(mint){
   }catch{}
   const insiderPct=holders.filter(h=>insiders.has(h.owner)).reduce((a,h)=>a+h.pct,0);
 
-  /* score */
   const flags=[];let score=0;
   const main=clusters[0];
   if(reached&&main&&main.wallets.has(creator)&&main.wallets.size>=3){const n=main.wallets.size;score+=n>=6?35:25;flags.push(["Creator-linked cluster",`${n} wallets share a funding source with the creator.`,"hi"])}
@@ -396,7 +389,6 @@ async function scanToken(mint){
   }
   if(!reached)flags.push(["Launch not reached","This token has too many transactions to reach its first trades, so creator and launch checks are skipped.","md"]);
 
-  /* render */
   const tag=a=>[a===creator?'<span class="tag r">creator</span>':"",callers.includes(a)?'<span class="tag r">caller</span>':callerSet.has(a)?'<span class="tag r">caller-linked</span>':"",inCluster.has(a)?'<span class="tag r">cluster</span>':"",wl.has(a)?'<span class="tag">case file</span>':""].join("");
   const fact=(v,l)=>`<div class="fact"><b>${v}</b><span>${l}</span></div>`;
   const callerNetV=traders.filter(x=>callerSet.has(x.w)).reduce((a,x)=>a+net(x),0);
@@ -423,7 +415,7 @@ async function scanToken(mint){
   const holdHtml=holders.length?`<div class="tbl"><table><tr><th>Wallet</th><th>% of supply</th></tr>${holders.map((h,i)=>`<tr><td>${link(h.owner)} ${i===0&&h.pct>30&&!insiders.has(h.owner)?'<span class="tag">likely bonding curve</span>':tag(h.owner)}</td><td>${fmt(h.pct,2)}%</td></tr>`).join("")}</table></div>`:`<p class="note">Holder data unavailable.</p>`;
   const profRows=traders.slice().sort((a,b)=>net(b)-net(a)).slice(0,10);
   const profHtml=`<div class="tbl"><table><tr><th>Wallet</th><th>SOL in</th><th>SOL out</th><th>Net</th><th>First buy</th><th>First sell</th><th>Funded by</th></tr>${profRows.map(x=>`<tr><td>${link(x.w)}${tag(x.w)}</td><td>${fmt(x.spent)}</td><td>${fmt(x.got)}</td><td class="${net(x)>=0?"lo":"hi"}">${fmt(net(x))}</td><td>${x.firstBuy!==null?fmt((x.firstBuy-t0)/60,1)+" min":"–"}</td><td>${x.sells.length?fmt((x.sells[0].t-t0)/60,1)+" min":"holding"}</td><td>${fund[x.w]&&fund[x.w].from?link(fund[x.w].from):fund[x.w]&&fund[x.w].old?"old wallet":"not traced"}</td></tr>`).join("")}</table></div>`;
-  const callerHtml=callers.length?`<h2>Caller wallets</h2>`+callers.map(c=>`<p>${link(c)} <span class="tag r">caller</span> ${W[c]?`traded this coin: in ${fmt(W[c].spent)} SOL, out ${fmt(W[c].got)} SOL`:"did not trade this coin directly"}${fund[c]&&fund[c].from?` · funded by ${link(fund[c].from)}`:fund[c]&&fund[c].old?" · old wallet, funding not traced":""}</p>`).join("")+(callerLinks.length?`<div class="tbl"><table><tr><th>Caller</th><th>Link</th><th>Via</th><th>Wallet</th><th>SOL</th></tr>${callerLinks.map(l=>`<tr><td>${short(l.c)}</td><td>${l.hop===2?"via middle wallet":l.dir}</td><td>${l.via?link(l.via):"–"}</td><td>${link(l.other)}${tag(l.other)}${W[l.other]?'<span class="tag">traded this coin</span>':""}</td><td>${fmt(l.sol)}</td></tr>`).join("")}</table></div><p class="note">Transfers of 0.02+ SOL found in the caller's last ~600 transactions and one hop further out.</p>`:`<p class="note">${noLinkMsg}</p>`):"";
+  const callerHtml=callers.length?`<h2>Caller wallets</h2>`+callers.map(c=>`<p>${link(c)} <span class="tag r">caller</span> ${W[c]?`traded this coin: in ${fmt(W[c].spent)} SOL, out${fmt(W[c].got)} SOL`:"did not trade this coin directly"}${fund[c]&&fund[c].from?` · funded by ${link(fund[c].from)}`:fund[c]&&fund[c].old?" · old wallet, funding not traced":""}</p>`).join("")+(callerLinks.length?`<div class="tbl"><table><tr><th>Caller</th><th>Link</th><th>Via</th><th>Wallet</th><th>SOL</th></tr>${callerLinks.map(l=>`<tr><td>${short(l.c)}</td><td>${l.hop===2?"via middle wallet":l.dir}</td><td>${l.via?link(l.via):"–"}</td><td>${link(l.other)}${tag(l.other)}${W[l.other]?'<span class="tag">traded this coin</span>':""}</td><td>${fmt(l.sol)}</td></tr>`).join("")}</table></div><p class="note">Transfers of 0.02+ SOL found in the caller's last ~600 transactions and one hop further out.</p>`:`<p class="note">${noLinkMsg}</p>`):"";
   const callHtml=call?`<h2>Around the callout</h2><div class="facts">${fact(call.pre,"wallets bought before the call")}${fact(call.fr.length,"of them sold within 20 min after")}${fact(call.frIns.length,"of those are linked wallets")}${fact((call.frNet>=0?"+":"")+fmt(call.frNet)+" SOL","their combined net")}</div>`:"";
   const ign=ignored.length?`<p class="note">Ignored ${ignored.length} shared funder(s) with 1,000+ transactions (likely exchanges or routers).</p>`:"";
   shell(mint,"Token",`
@@ -459,7 +451,6 @@ async function walletStats(addr,pages){
   return{txCount:txs.length,list};
 }
 
-/* Price outcome per coin: DexScreener for current state, GeckoTerminal candles for peak timing */
 async function jget(u){const r=await fetch(u);if(!r.ok)throw new Error("HTTP "+r.status);return r.json()}
 async function outcome(r){
   const d=await jget(`https://api.dexscreener.com/latest/dex/tokens/${r.mint}`);
@@ -508,7 +499,6 @@ async function loadOutcomes(list,id){
   return res;
 }
 
-/* Crew detection: wallets that keep showing up among the first buyers of this wallet's coins */
 async function crewScan(addr,list,id){
   const pick=list.filter(r=>r.buys>0).slice(0,6);
   const seen={};let checked=0;
@@ -564,9 +554,8 @@ async function scanWallet(addr){
   $("#crew").innerHTML=crew.partners.length?`<p class="note">Wallets that bought early in at least ${crew.need} of the ${crew.checked} coins compared. Popular snipers can appear here too, so look at the launch-slot column.</p>
     <div class="tbl"><table><tr><th>Wallet</th><th>Coins together</th><th>Launch-slot buys</th></tr>${crew.partners.slice(0,20).map(p=>`<tr><td>${link(p.w)}${watched(p.w)?'<span class="tag">case file</span>':""}</td><td>${p.n} of ${crew.checked}</td><td>${p.same}</td></tr>`).join("")}</table></div>
     <div class="row"><button class="ghost sm" data-all="${crew.partners.slice(0,20).map(p=>p.w).join(",")}" data-note="crew of ${short(addr)}">Add all to case file</button></div>`
-    :`<p class="note">${crew.checked?`No wallet appeared early in ${crew.need}+ of the ${crew.checked} coins compared.`:"Not enough coins with a readable launch to compare."}</p>`;
+    :`<p class="note">${crew.checked?`No wallet appeared early in ${crew.need}+ of the${crew.checked} coins compared.`:"Not enough coins with a readable launch to compare."}</p>`;
 
-  /* score */
   const flags=[];let score=0;
   if(crew.partners.length>=3){score+=35;flags.push(["Recurring crew",`${crew.partners.length} wallets bought early in ${crew.need}+ of ${crew.checked} coins this wallet traded.`,"hi"])}
   else if(crew.partners.length){score+=20;flags.push(["Recurring partners",`${crew.partners.length} wallet(s) keep appearing among the first buyers.`,"md"])}
@@ -582,10 +571,8 @@ async function scanWallet(addr){
   log("Done.");
 }
 
-/* ---------- Run ---------- */
 async function run(fn){
   const a=$("#addr").value.trim();
-  if(!KEY){log("Add your Helius API key first.");return}
   if(!/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(a)){log("That doesn't look like a Solana address.");return}
   scanId++;
   $("#bW").disabled=$("#bT").disabled=true;$("#out").innerHTML="";
