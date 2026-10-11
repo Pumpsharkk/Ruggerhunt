@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rugwatch · Cyberpunk Edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#05050a;--panel:#0b0b16;--ink:#00ffcc;--mute:#ff007f;--line:#1a1a3a;--red:#ff2a6d;--amber:#f4eeff;--teal:#05d9e8;--blue:#00ffcc;--neon-glow:0 0 10px rgba(0,255,204,0.3)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:#e0e0e8;font:15px/1.5 "Share Tech Mono",monospace;padding:max(14px,env(safe-area-inset-top)) 14px max(24px,env(safe-area-inset-bottom))}
+main{max-width:960px;margin:0 auto}
+h1{font-family:"Orbitron",sans-serif;font-size:28px;margin:6px 0 2px;letter-spacing:2px;color:var(--teal);text-shadow:0 0 10px rgba(5,217,232,0.5)}
+h2{font-family:"Orbitron",sans-serif;font-size:16px;margin:16px 0 6px;color:var(--teal);letter-spacing:1px}
+h2:first-child{margin-top:0}
+.sub{color:#8a8ab0;margin:0 0 16px;font-size:14px}
+.panel{background:var(--panel);border:1px solid var(--teal);border-radius:4px;padding:14px;margin-bottom:12px;box-shadow:0 0 15px rgba(5,217,232,0.1)}
+label{display:block;font-family:"Orbitron",sans-serif;font-size:12px;font-weight:600;margin-bottom:4px;color:var(--teal);letter-spacing:1px}
+input[type=text],input[type=password],input[type=datetime-local],select{width:100%;padding:10px;border:1px solid var(--teal);border-radius:2px;background:#030308;color:#00ffcc;font:14px "Share Tech Mono",monospace;box-shadow:inset 0 0 5px rgba(5,217,232,0.2)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+button{font-family:"Orbitron",sans-serif;font-weight:600;font-size:13px;padding:10px 14px;border-radius:2px;border:1px solid var(--teal);background:#030308;color:var(--teal);cursor:pointer;text-shadow:0 0 5px rgba(5,217,232,0.5);box-shadow:0 0 10px rgba(5,217,232,0.2);transition:all 0.2s}
+button:hover{background:var(--teal);color:#030308;box-shadow:0 0 15px var(--teal)}
+button.ghost{background:transparent;color:var(--mute);border-color:var(--mute);box-shadow:0 0 10px rgba(255,0,127,0.2)}
+button.ghost:hover{background:var(--mute);color:#030308;box-shadow:0 0 15px var(--mute)}
+button.sm{padding:4px 9px;font-size:11px}
+button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+button:disabled{opacity:.4;cursor:not-allowed}
+#log{color:var(--teal);font-size:13px;min-height:20px;margin:8px 0 0;text-shadow:0 0 5px rgba(5,217,232,0.3)}
+.score{display:flex;align-items:baseline;gap:12px;margin-bottom:6px}
+.score b{font-size:44px;line-height:1}
+.hi{color:var(--red);text-shadow:0 0 5px rgba(255,42,109,0.5)}
+.md{color:#ffbd00;text-shadow:0 0 5px rgba(255,189,0,0.5)}
+.lo{color:var(--teal);text-shadow:0 0 5px rgba(5,217,232,0.5)}
+.flags{display:grid;gap:6px;margin:8px 0}
+.flag{border-left:3px solid currentColor;padding:2px 10px;font-size:14px;background:rgba(255,255,255,0.02)}
+.flag span{color:#e0e0e8}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{color:var(--teal);font-family:"Orbitron",sans-serif;font-weight:600;font-size:11px;letter-spacing:1px}
+.mono,td a{font-family:"Share Tech Mono",monospace}
+a{color:var(--teal);text-decoration:none;text-shadow:0 0 5px rgba(5,217,232,0.3)}
+a:hover{text-decoration:underline}
+.star{background:none;border:none;color:#ffbd00;padding:0 4px;font-size:16px;cursor:pointer;text-shadow:0 0 5px rgba(255,189,0,0.5)}
+.note{font-size:13px;color:#8a8ab0}
+.tag{background:rgba(5,217,232,0.1);border:1px solid var(--teal);border-radius:2px;padding:1px 6px;font-size:11px;margin-left:4px;color:var(--teal)}
+.tag.r{background:rgba(255,42,109,0.1);border-color:var(--red);color:var(--red)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;margin:10px 0}
+.fact{border:1px solid var(--line);border-radius:2px;padding:8px 10px;background:#030308;box-shadow:inset 0 0 5px rgba(0,0,0,0.5)}
+.fact b{display:block;font-size:18px;color:var(--teal);font-family:"Orbitron",sans-serif}
+.fact span{font-size:12px;color:#8a8ab0}
+.banner{padding:12px 14px;border-radius:2px;color:#fff;margin-bottom:10px;border:1px solid}
+.banner b{display:block;font-family:"Orbitron",sans-serif;font-size:22px;letter-spacing:1px}
+.banner span{font-size:13px}
+.danger{border:1px solid var(--red);border-radius:2px;padding:8px 10px;margin-bottom:8px;background:#030308;box-shadow:0 0 10px rgba(255,42,109,0.2)}
+.danger p{margin:0 0 4px}
+.cl{border:1px solid var(--line);border-radius:2px;padding:10px;margin-bottom:10px;background:#030308}
+.cl p{margin:0 0 6px}
+[hidden]{display:none!important}
+.catrow{display:grid;grid-template-columns:110px 1fr 34px;gap:8px;align-items:center;margin:4px 0;font-size:13px}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%}
+details.clean{margin-top:8px}
+details.clean summary{cursor:pointer;color:var(--teal);font-size:13px}
+details.clean p{margin:4px 0 0}
+.tabs{display:flex;gap:6px;margin-bottom:14px}
+.tab{flex:1;background:#030308;color:var(--mute);border-color:var(--mute);box-shadow:none}
+.tab:hover{background:var(--mute);color:#030308;box-shadow:0 0 15px var(--mute)}
+.tab[aria-selected=true]{background:var(--teal);color:#030308;border-color:var(--teal);box-shadow:0 0 12px var(--teal)}
+</style>
+</head>
+<body>
+<main>
+<h1>RUGWATCH // CYBER</h1>
+<p class="sub">Find the wallets behind Pump.fun rugs: funding clusters, repeat crews, and what happens to price after they sell.</p>
+
+<section class="panel">
+  <div class="tabs" role="tablist">
+    <button class="tab" id="tabT" role="tab" aria-selected="true">Token</button>
+    <button class="tab" id="tabW" role="tab" aria-selected="false">Wallet</button>
+  </div>
+
+  <div id="paneT">
+    <label for="addr">Token contract address (CA)</label>
+    <input id="addr" type="text" placeholder="Solana token address" autocomplete="off" spellcheck="false">
+    <label for="callers" style="margin-top:12px">Caller wallet(s), optional</label>
+    <input id="callers" type="text" placeholder="Wallets of the person who called the coin, comma-separated" autocomplete="off" spellcheck="false">
+    <label for="calltime" style="margin-top:12px">Callout time, optional</label>
+    <input id="calltime" type="datetime-local">
+    <p class="note" style="margin:6px 0 0">The time is read in your device's time zone.</p>
+    <div class="row">
+      <button id="bT">Scan token</button>
+      <label for="depth" style="margin:0 0 0 6px;font-weight:400">Trades to read</label>
+      <select id="depth" style="width:auto">
+        <option value="200">First 200</option>
+        <option value="400" selected>First 400</option>
+        <option value="800">First 800</option>
+      </select>
+    </div>
+  </div>
+
+  <div id="paneW" hidden>
+    <label for="waddr">Wallet address</label>
+    <input id="waddr" type="text" placeholder="Solana wallet address" autocomplete="off" spellcheck="false">
+    <p class="note" style="margin:6px 0 0">Checks the wallet's recent Pump.fun coins: how many hours each one lived, whether it collapsed right after the wallet sold, and how many linked wallets the wallet entered with.</p>
+    <div class="row">
+      <button id="bW">Check wallet</button>
+      <label for="wcount" style="margin:0 0 0 6px;font-weight:400">Coins to check</label>
+      <select id="wcount" style="width:auto">
+        <option value="6">Last 6</option>
+        <option value="10" selected>Last 10</option>
+        <option value="15">Last 15</option>
+        <option value="20">Last 20</option>
+      </select>
+    </div>
+  </div>
+  <div id="log" role="status"></div>
+</section>
+
+<div id="out"></div>
+
+<section class="panel">
+  <h2>Case file</h2>
+  <div id="wl"></div>
+  <div class="row">
+    <button class="ghost sm" id="bExp">Export JSON</button>
+    <button class="ghost sm" id="bClr">Clear</button>
+  </div>
+  <p class="note" style="margin-bottom:0">Wallets you save here are tagged in every later scan. A coin that contains wallets from your case file is a strong repeat signal.</p>
+</section>
+
+<p class="note">Everything here is a heuristic read of public on-chain data, not proof of wrongdoing. Shared funders can be exchanges, snipers or friends. Verify transactions on Solscan before you accuse anyone.</p>
+</main>
+
+<script>
+const $=s=>document.querySelector(s);
+const PUMP="6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P";
+const WSOL="So11111111111111111111111111111111111111112";
+const LAM=1e9;
+const short=a=>a?a.slice(0,4)+"…"+a.slice(-4):"?";
+const fmt=(n,d=2)=>Number(n).toLocaleString("en-US",{maximumFractionDigits:d});
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const log=m=>{$("#log").textContent=m};
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const median=a=>{const s=[...a].sort((x,y)=>x-y);return s.length?s[Math.floor(s.length/2)]:null};
+// Helius API key (embedded)
+let KEY="d2e2d5ea-fb59-4d24-8894-a8f65a4d63f9";
+let scanId=0;
+
+/* ---------- Case file ---------- */
+const getWL=()=>{try{return JSON.parse(localStorage.getItem("rw_wl")||"[]")}catch{return[]}};
+const setWL=l=>localStorage.setItem("rw_wl",JSON.stringify(l));
+const watched=a=>getWL().some(x=>x.addr===a);
+const link=a=>`<a href="https://solscan.io/account/${a}" target="_blank" rel="noopener">${short(a)}</a><button class="star" data-w="${a}" title="Add to case file">${watched(a)?"★":"☆"}</button>`;
+function renderWL(){
+  const l=getWL();
+  $("#wl").innerHTML=l.length?`<div class="tbl"><table><tr><th>Wallet</th><th>Note</th><th></th></tr>${l.map(x=>`<tr><td>${link(x.addr)}</td><td>${esc(x.note||"")}</td><td><button class="star" data-rm="${x.addr}" title="Remove">✕</button></td></tr>`).join("")}</table></div>`:`<p class="note">Empty. Tap ☆ next to a wallet in any scan to save it.</p>`;
+}
+document.addEventListener("click",e=>{
+  const d=e.target.dataset||{};
+  if(d.w){
+    let l=getWL();
+    if(l.some(x=>x.addr===d.w))l=l.filter(x=>x.addr!==d.w);
+    else l.push({addr:d.w,note:prompt("Note for this wallet (optional)")||""});
+    setWL(l);renderWL();
+    document.querySelectorAll(`[data-w="${d.w}"]`).forEach(b=>b.textContent=watched(d.w)?"★":"☆");
+  }
+  if(d.rm){setWL(getWL().filter(x=>x.addr!==d.rm));renderWL()}
+  if(d.all){
+    const note=d.note||"";const l=getWL();
+    d.all.split(",").forEach(a=>{if(!l.some(x=>x.addr===a))l.push({addr:a,note})});
+    setWL(l);renderWL();
+    document.querySelectorAll("[data-w]").forEach(b=>b.textContent=watched(b.dataset.w)?"★":"☆");
+    e.target.textContent="Saved";
+  }
+});
+$("#bClr").onclick=()=>{if(confirm("Clear the whole case file?")){setWL([]);renderWL()}};
+$("#bExp").onclick=()=>{const b=new Blob([JSON.stringify(getWL(),null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="rugwatch-case-file.json";a.click()};
+
+/* ---------- Data helpers ---------- */
+async function rpc(method,params){
+  const r=await fetch(`https://mainnet.helius-rpc.com/?api-key=${KEY}`,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({jsonrpc:"2.0",id:1,method,params})});
+  const j=await r.json();if(j.error)throw new Error(j.error.message);return j.result;
+}
+async function parseTx(sigs){
+  const out=[];
+  for(let i=0;i<sigs.length;i+=100){
+    const r=await fetch(`https://api.helius.xyz/v0/transactions?api-key=${KEY}`,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({transactions:sigs.slice(i,i+100)})});
+    const j=await r.json();if(!Array.isArray(j))throw new Error(j.error||"Could not parse transactions");out.push(...j);
+  }
+  return out;
+}
+async function sigsAll(addr,maxPages){
+  let all=[],before,reached=false;
+  for(let p=0;p<maxPages;p++){
+    const r=await rpc("getSignaturesForAddress",[addr,{limit:1000,...(before?{before}:{})}]);
+    all.push(...r.filter(s=>!s.err));
+    if(r.length<1000){reached=true;break}
+    before=r[r.length-1].signature;log(`Reading signatures… ${all.length}`);
+  }
+  return{all,reached};
+}
+async function walletTxs(addr,pages){
+  let all=[],before;
+  for(let p=0;p<pages;p++){
+    const u=`https://api.helius.xyz/v0/addresses/${addr}/transactions?api-key=${KEY}&limit=100`+(before?`&before=${before}`:"");
+    const r=await(await fetch(u)).json();
+    if(!Array.isArray(r))throw new Error(r.error||"Could not load history");
+    all.push(...r);if(r.length<100)break;before=r[r.length-1].signature;log(`Reading history… ${all.length} transactions`);
+  }
+  return all;
+}
+const isPump=t=>t.source==="PUMP_FUN"||(t.instructions||[]).some(i=>i.programId===PUMP);
+const solDelta=(t,a)=>((t.accountData||[]).find(x=>x.account===a)||{}).nativeBalanceChange||0;
+
+/* One row per transaction where the fee payer moved this token: signed SOL (lamports) and signed token amount */
+function tradeRows(txs,mint){
+  const rows=[];
+  for(const t of txs){
+    const w=t.feePayer;let tok=0,seen=false;
+    for(const x of (t.tokenTransfers||[])){
+      if(x.mint!==mint)continue;seen=true;
+      if(x.toUserAccount===w)tok+=x.tokenAmount;
+      if(x.fromUserAccount===w)tok-=x.tokenAmount;
+    }
+    if(!seen||!tok)continue;
+    rows.push({w,t:t.timestamp,slot:t.slot,sol:solDelta(t,w),tok});
+  }
+  return rows.sort((a,b)=>a.slot-b.slot||a.t-b.t);
+}
+async function funderOf(w){
+  const sg=await rpc("getSignaturesForAddress",[w,{limit:1000}]);
+  if(sg.length>=1000)return{old:true};
+  const p=await parseTx(sg.filter(s=>!s.err).slice(-5).map(s=>s.signature));
+  p.sort((a,b)=>a.timestamp-b.timestamp);
+  for(const t of p){
+    const n=(t.nativeTransfers||[]).find(n=>n.toUserAccount===w&&n.fromUserAccount!==w&&n.amount>=10000000);
+    if(n)return{from:n.fromUserAccount};
+  }
+  return{};
+}
+
+/* ---------- Result shell ---------- */
+function shell(id,kind,body){
+  $("#out").innerHTML=`<section class="panel"><div id="verdict"><p class="note">Analyzing…</p></div>
+  <p class="mono note" style="word-break:break-all">${kind} ${esc(id)}</p>${body}</section>`;
+}
+/* ---------- Scoring engine ----------
+   Each signal has a weight (0-1). Inside a group the strongest signal counts fully and the next ones
+   count less (they are usually correlated). Groups then combine, so independent evidence adds up. */
+function scoreSignals(sigs,damp={}){
+  const by={},disc=[1,.6,.4,.3];
+  for(const x of sigs.filter(x=>x.hit).sort((a,b)=>b.w-a.w))(by[x.cat]??=[]).push(x);
+  const cat={};
+  for(const [c,list] of Object.entries(by)){
+    let keep=1;list.forEach((x,i)=>{keep*=1-x.w*(disc[i]??.25)});cat[c]=(1-keep)*(damp[c]??1);
+  }
+  let keep=1;for(const v of Object.values(cat))keep*=1-v;
+  return{score:Math.round((1-keep)*100),cat};
+}
+function confidence(x){
+  const pct=Math.round(Math.max(0,Math.min(1,x))*100);
+  return{pct,label:pct>=75?"High":pct>=45?"Medium":"Low"};
+}
+function verdict(score,flags,o={}){
+  score=Math.min(100,Math.round(score));
+  const lvl=score>=50?"danger":score>=25?"caution":(o.noData?"nodata":"safe");
+  const bg={danger:"rgba(255,42,109,0.15)",caution:"rgba(255,189,0,0.15)",safe:"rgba(5,217,232,0.15)",nodata:"rgba(138,138,176,0.15)"}[lvl];
+  const border={danger:"var(--red)",caution:"#ffbd00",safe:"var(--teal)",nodata:"#8a8ab0"}[lvl];
+  const title={danger:o.kind==="wallet"?"DANGER WALLET":"DANGER — RUG PATTERN",caution:"CAUTION",safe:"SAFE",nodata:"NOT ENOUGH DATA"}[lvl];
+  const sub={danger:"Strong rug or insider pattern. Stay away from this wallet and its crew.",caution:"Some warning signs. Read the signals before you trust it.",safe:"No rug pattern found in the data we checked. This is not a guarantee.",nodata:o.reason||"Too little data to judge. This is not a clean result."}[lvl];
+  const who=lvl==="danger"&&o.main?`<div class="danger"><p><b>Danger wallet</b> ${link(o.main)}</p>${o.linked&&o.linked.length?`<p><b>Linked wallets</b> ${o.linked.map(w=>link(w)).join(" ")}</p>`:""}<div class="row"><button class="ghost sm" data-all="${[o.main,...(o.linked||[])].join(",")}" data-note="danger: ${esc(o.note||"")}">Add all to case file</button></div></div>`:"";
+  const bars=o.cats&&o.catLabels?Object.entries(o.catLabels).map(([k,l])=>{
+    const v=Math.round((o.cats[k]||0)*100),col=v>=50?"var(--red)":v>=25?"#ffbd00":"var(--teal)";
+    return `<div class="catrow"><span>${l}</span><div class="bar"><i style="width:${v}%;background:${col}"></i></div><b>${v}</b></div>`;
+  }).join(""):"";
+  const clean=o.checks&&o.checks.length?`<details class="clean"><summary>Checked and clean (${o.checks.length})</summary>${o.checks.map(c=>`<p class="note"><b>${esc(c[0])}:</b> ${esc(c[1])}</p>`).join("")}</details>`:"";
+  const confLine=o.conf?`<span style="display:block;margin-top:4px;opacity:.9">Confidence: ${o.conf.label} (${o.conf.pct}%)${o.coverage?" · "+o.coverage:""}</span>`:(o.coverage?`<span style="display:block;margin-top:4px;opacity:.9">${o.coverage}</span>`:"");
+  $("#verdict").innerHTML=`<div class="banner" style="background:${bg};border-color:${border}"><b>${title}</b><span>${sub} Score ${score}/100.</span>${confLine}</div>${who}
+  ${bars?`<div style="margin:8px 0">${bars}</div>`:""}
+  <div class="flags">${flags.length?flags.map(f=>`<div class="flag ${f[2]}"><span><b>${esc(f[0])}.</b> ${esc(f[1])}${f[3]!==undefined?` <span class="tag">weight ${f[3]}</span>`:""}</span></div>`).join(""):'<span class="note">No warning signals triggered.</span>'}</div>${clean}
+  <p class="note">Signals in the same group count with diminishing weight. Groups combine, so separate kinds of evidence add up faster than one kind repeated.</p>`;
+}
+
+/* ================= TOKEN SCAN ================= */
+async function scanToken(mint){
+  const depth=+$("#depth").value;
+  const callers=[...new Set($("#callers").value.match(/[1-9A-HJ-NP-Za-km-z]{32,44}/g)||[])].slice(0,3);
+  const ct=$("#calltime").value,callT=ct?Math.floor(new Date(ct).getTime()/1000):null;
+  log("Finding launch…");
+  const {all,reached}=await sigsAll(mint,12);
+  if(!all.length)throw new Error("No transactions found. Is this a token mint address?");
+  const sigs=all.slice(-depth).reverse().map(s=>s.signature);
+  log(`Parsing first ${sigs.length} transactions…`);
+  const txs=(await parseTx(sigs)).sort((a,b)=>a.slot-b.slot||a.timestamp-b.timestamp);
+  const creator=txs[0].feePayer,s0=txs[0].slot,t0=txs[0].timestamp;
+  const rows=tradeRows(txs,mint);
+
+  /* per-wallet book */
+  const W={};
+  for(const r of rows){
+    const o=W[r.w]??={w:r.w,spent:0,got:0,bought:0,sold:0,slot:r.slot-s0,sells:[],firstBuy:null};
+    o.slot=Math.min(o.slot,r.slot-s0);
+    if(r.tok>0){o.spent+=Math.max(0,-r.sol)/LAM;o.bought+=r.tok;if(o.firstBuy===null)o.firstBuy=r.t}
+    else{const s=Math.max(0,r.sol)/LAM;o.got+=s;o.sold+=-r.tok;o.sells.push({t:r.t,sol:s})}
+  }
+  const traders=Object.values(W);
+  const bundled=traders.filter(x=>x.slot<=1&&x.w!==creator&&x.bought>0);
+
+  /* funding trace: creator, launch-slot buyers, then biggest buyers */
+  const profit=traders.filter(x=>x.w!==creator&&!callers.includes(x.w)).sort((a,b)=>(b.got-b.spent)-(a.got-a.spent)).slice(0,6).map(x=>x.w);
+  const rest=traders.filter(x=>x.w!==creator).sort((a,b)=>((b.slot<=1)-(a.slot<=1))||b.spent-a.spent).map(x=>x.w);
+  const cand=[...new Set([...callers,creator,...profit,...rest])].slice(0,22);
+  const fund={};
+  for(let i=0;i<cand.length;i+=4){
+    log(`Tracing who funded wallets… ${Math.min(i+4,cand.length)}/${cand.length}`);
+    await Promise.all(cand.slice(i,i+4).map(async w=>{try{fund[w]=await funderOf(w)}catch{fund[w]={}}}));
+  }
+  const byF={};
+  for(const [w,f] of Object.entries(fund))if(f.from)(byF[f.from]??=new Set()).add(w);
+  const ignored=[];let groups=[];
+  log("Checking shared funders…");
+  for(const [f,set] of Object.entries(byF)){
+    const L=new Set(set);if(W[f]||f===creator)L.add(f);
+    if(L.size<2)continue;
+    let busy=false;try{busy=(await rpc("getSignaturesForAddress",[f,{limit:1000}])).length>=1000}catch{}
+    if(busy){ignored.push(f);continue}
+    groups.push({funders:new Set([f]),wallets:L});
+  }
+  const clusters=[];
+  for(const g of groups){
+    const hit=clusters.filter(c=>[...g.wallets].some(w=>c.wallets.has(w)));
+    if(!hit.length){clusters.push(g);continue}
+    const base=hit[0];
+    for(const h of [g,...hit.slice(1)]){h.wallets.forEach(w=>base.wallets.add(w));h.funders.forEach(f=>base.funders.add(f));if(h!==g)clusters.splice(clusters.indexOf(h),1)}
+  }
+  clusters.sort((a,b)=>(b.wallets.has(creator)-a.wallets.has(creator))||b.wallets.size-a.wallets.size);
+  const inCluster=new Set(clusters.flatMap(c=>[...c.wallets]));
+  const creatorSet=new Set([creator,...(clusters.find(c=>c.wallets.has(creator))?.wallets||[])]);
+  const callerLinks=[];const deepStats={tx:0,mid:0};
+  if(callers.length){
+    const known=new Set([...creatorSet,...inCluster,...traders.map(x=>x.w)]);
+    for(const c of callers){
+      log(`Reading caller history… ${short(c)}`);
+      let hist=[];try{hist=await walletTxs(c,6)}catch{}
+      deepStats.tx+=hist.length;
+      const cp={};
+      for(const t of hist)for(const n of (t.nativeTransfers||[])){
+        if(n.amount<20000000||n.fromUserAccount===n.toUserAccount)continue;
+        const other=n.fromUserAccount===c?n.toUserAccount:n.toUserAccount===c?n.fromUserAccount:null;
+        if(!other||callers.includes(other))continue;
+        const o=cp[other]??={sol:0,sent:0,recv:0};
+        o.sol+=n.amount/LAM;if(n.fromUserAccount===c)o.sent+=n.amount/LAM;else o.recv+=n.amount/LAM;
+      }
+      for(const [other,o] of Object.entries(cp))if(known.has(other))callerLinks.push({c,other,sol:o.sol,dir:o.sent>=o.recv?"sent to":"received from",hop:1,via:null});
+      const top=Object.entries(cp).filter(([w])=>!known.has(w)).sort((a,b)=>b[1].sol-a[1].sol).slice(0,8);
+      for(const [mid] of top){
+        log(`Following money from caller… ${short(mid)}`);
+        try{
+          if((await rpc("getSignaturesForAddress",[mid,{limit:1000}])).length>=1000)continue;
+          deepStats.mid++;
+          for(const t of await walletTxs(mid,2))for(const n of (t.nativeTransfers||[])){
+            if(n.amount<20000000)continue;
+            const other=n.fromUserAccount===mid?n.toUserAccount:n.toUserAccount===mid?n.fromUserAccount:null;
+            if(other&&other!==c&&known.has(other)&&!callers.includes(other)&&!callerLinks.some(l=>l.c===c&&l.other===other))callerLinks.push({c,other,sol:n.amount/LAM,dir:"via",hop:2,via:mid});
+          }
+        }catch{}
+      }
+    }
+  }
+  const callerSet=new Set(callers);
+  for(const cl of clusters)if([...cl.wallets].some(w=>callers.includes(w))||[...cl.funders].some(f=>callers.includes(f)))cl.wallets.forEach(w=>callerSet.add(w));
+  callerLinks.forEach(l=>callerSet.add(l.other));
+  const linkedTraders=[...new Set(callerLinks.map(l=>l.other).filter(w=>W[w]))];
+  const noLinkMsg=`No link found after reading ${deepStats.tx} caller transactions and following ${deepStats.mid} wallet(s) one hop further. The caller may use wallets we could not reach.`;
+  const linkedToCreator=callers.length>0&&(callers.some(c=>creatorSet.has(c))||callerLinks.some(l=>creatorSet.has(l.other)));
+  const insiders=new Set([...inCluster,...callerSet,creator]);
+  const wl=new Set(getWL().map(x=>x.addr));
+  const wlHits=traders.filter(x=>wl.has(x.w)).map(x=>x.w);
+
+  /* money flow: insiders vs everyone else */
+  const net=x=>x.got-x.spent;
+  const ins=traders.filter(x=>insiders.has(x.w)),out=traders.filter(x=>!insiders.has(x.w));
+  const insiderNet=ins.reduce((a,x)=>a+net(x),0),outsiderNet=out.reduce((a,x)=>a+net(x),0);
+  let call=null;
+  if(callT){
+    const lastT=rows.length?rows[rows.length-1].t:t0;
+    const pre=traders.filter(x=>x.firstBuy!==null&&x.firstBuy<callT&&x.w!==creator);
+    const fr=pre.filter(x=>x.sells.some(s=>s.t>=callT&&s.t<=callT+1200));
+    const frIns=fr.filter(x=>insiders.has(x.w));
+    const callerSold=callers.filter(c=>W[c]&&W[c].firstBuy!==null&&W[c].firstBuy<callT&&W[c].sells.some(s=>s.t>=callT));
+    call={pre:pre.length,fr,frIns,frNet:fr.reduce((a,x)=>a+net(x),0),callerSold,outside:callT<t0||callT>lastT};
+  }
+
+  /* price series from on-chain trades (ignore dust trades, they distort price) */
+  const px=rows.filter(r=>Math.abs(r.sol)>=0.02*LAM&&r.tok).map(r=>({t:r.t,p:Math.abs(r.sol)/LAM/Math.abs(r.tok)})).sort((a,b)=>a.t-b.t);
+  let peak=null,toPeak=null,peakToCrash=null,exitT=null,exitVsPeak=null,crashAfterExit=null,drawdown=null;
+  if(px.length>3){
+    peak=px.reduce((m,x)=>x.p>m.p?x:m,px[0]);
+    toPeak=Math.max(0,(peak.t-t0)/60);
+    const c=px.find(x=>x.t>peak.t&&x.p<=peak.p*.1);if(c)peakToCrash=(c.t-peak.t)/60;
+    drawdown=1-px[px.length-1].p/peak.p;
+    const sells=ins.flatMap(x=>x.sells).sort((a,b)=>a.t-b.t),tot=sells.reduce((a,s)=>a+s.sol,0);
+    if(tot>=1){
+      let cum=0;for(const s of sells){cum+=s.sol;if(cum>=tot/2){exitT=s.t;break}}
+      exitVsPeak=(exitT-peak.t)/60;
+      const before=[...px].reverse().find(x=>x.t<=exitT)||px[0];
+      const c2=px.find(x=>x.t>exitT&&x.p<=before.p*.2);if(c2)crashAfterExit=(c2.t-exitT)/60;
+    }
+  }
+
+  /* holders */
+  log("Checking holders…");
+  let holders=[];
+  try{
+    const sup=await rpc("getTokenSupply",[mint]);
+    const lg=await rpc("getTokenLargestAccounts",[mint]);
+    const accs=lg.value.slice(0,20);
+    const info=await rpc("getMultipleAccounts",[accs.map(a=>a.address),{encoding:"jsonParsed"}]);
+    holders=accs.map((a,i)=>({owner:info.value[i]?.data?.parsed?.info?.owner,pct:a.uiAmount/sup.value.uiAmount*100})).filter(h=>h.owner);
+  }catch{}
+  const insiderPct=holders.filter(h=>insiders.has(h.owner)).reduce((a,h)=>a+h.pct,0);
+
+  /* score: weighted signals in three groups (see scoreSignals) */
+  const main=clusters[0];
+  const S=[];
+  const sg=(cat,name,w,hit,clean)=>S.push({cat,name,w:w||0,hit:(w||0)>0,text:(w||0)>0?hit:clean});
+  const cl=main&&main.wallets.size>=3?main.wallets.size:0;
+  const creatorCl=reached&&main&&main.wallets.has(creator)&&cl>=3;
+  sg("network","Creator-linked cluster",creatorCl?(cl>=6?.50:.38):0,`${cl} wallets share a funding source with the creator.`,"No group of 3+ wallets shares a funder with the creator.");
+  sg("network","Funding cluster",(!creatorCl&&cl)?(cl>=6?.30:.22):0,`${cl} wallets were first funded by the same source.`,"No shared funding source among the early buyers traced.");
+  sg("network","Launch-slot buys",bundled.length>=6?.18:bundled.length>=3?.10:0,`${bundled.length} wallets bought within 2 slots of launch.`,`${bundled.length} wallet(s) bought within 2 slots of launch.`);
+  if(callers.length){
+    sg("network","Caller linked to creator",linkedToCreator?.55:0,callerLinks.some(l=>creatorSet.has(l.other))?"Direct SOL transfers connect the caller wallet to creator-side wallets.":"The caller wallet shares a funding source with the creator.",noLinkMsg);
+    sg("network","Caller tied to buyers",linkedTraders.length>=3?.45:linkedTraders.length?.30:0,`${linkedTraders.length} wallet(s) that traded this coin exchanged SOL with the caller, directly or through one middle wallet.`,"No trader of this coin exchanged SOL with the caller (searched 2 hops).");
+    sg("network","Caller-linked wallets",(!linkedToCreator&&!linkedTraders.length&&callerSet.size>callers.length)?.12:0,`${callerSet.size-callers.length} other wallet(s) are tied to the caller by funding.`,"No other wallets tied to the caller by funding.");
+  }
+  sg("network","Case-file match",wlHits.length>=3?.40:wlHits.length?.30:0,`${wlHits.length} wallet(s) from your case file traded this coin.`,"No wallet from your case file traded this coin.");
+  const ratio=(insiderNet>=2&&outsiderNet<0)?insiderNet/-outsiderNet:0;
+  sg("money","Money moved to insiders",ratio>=.5?.40:ratio>=.25?.18:0,`Linked wallets netted +${fmt(insiderNet)} SOL while everyone else is at ${fmt(outsiderNet)} SOL (${fmt(ratio*100,0)}% of outsider losses).`,`Linked wallets net ${fmt(insiderNet)} SOL; everyone else ${fmt(outsiderNet)} SOL.`);
+  sg("money","Insiders hold supply",insiderPct>=25?.20:insiderPct>=15?.12:0,`Creator and linked wallets hold ${fmt(insiderPct,1)}% of supply.`,`Creator and linked wallets hold ${fmt(insiderPct,1)}% of supply.`);
+  sg("timing","Collapse after exit",(crashAfterExit!==null&&crashAfterExit<=30&&insiderNet>0)?.40:0,`Price fell 80%+ within ${crashAfterExit!==null?fmt(crashAfterExit,0):"?"} min of the linked wallets' main exit.`,crashAfterExit===null?"No collapse measured after the linked wallets' exit.":`Price took ${fmt(crashAfterExit,0)} min to fall 80% after their exit.`);
+  if(call){
+    sg("timing","Caller sold into the call",call.callerSold.length?.45:0,"A caller wallet bought before the callout and sold after it.","No caller wallet sold into the call.");
+    const share=call.fr.length?call.frIns.length/call.fr.length:0;
+    const frTxt=share>=.5?`${call.frIns.length} of ${call.fr.length} wallets that bought before the call and sold within 20 min after belong to the linked group.`:`${call.fr.length} wallets bought before the call and sold within 20 min after it.`;
+    sg("timing","Pre-call buyers exited",call.fr.length>=3?(share>=.5?.30:.10):0,frTxt,frTxt);
+  }
+  const {score,cat:cats}=scoreSignals(S);
+  const flags=S.filter(x=>x.hit).sort((a,b)=>b.w-a.w).map(x=>[x.name,x.text,x.w>=.3?"hi":x.w>=.12?"md":"lo",Math.round(x.w*100)]);
+  const checks=S.filter(x=>!x.hit).map(x=>[x.name,x.text]);
+  if(!reached)flags.push(["Launch not reached","This token has too many transactions to reach its first trades, so creator and launch checks are skipped.","md"]);
+  if(call&&call.outside)flags.push(["Callout time outside trades read","The time you gave falls outside the trades we parsed. Raise Trades to read.","md"]);
+  const traced=Object.values(fund).filter(f=>f&&(f.from||f.old)).length;
+  const conf=confidence(.3*(reached?1:.3)+.25*Math.min(1,traders.length/30)+.25*Math.min(1,traced/Math.max(1,Math.min(cand.length,12)))+.1*(holders.length?1:0)+.1*(px.length>10?1:0));
+
+  /* render */
+  const tag=a=>[a===creator?'<span class="tag r">creator</span>':"",callers.includes(a)?'<span class="tag r">caller</span>':callerSet.has(a)?'<span class="tag r">caller-linked</span>':"",inCluster.has(a)?'<span class="tag r">cluster</span>':"",wl.has(a)?'<span class="tag">case file</span>':""].join("");
+  const fact=(v,l)=>`<div class="fact"><b>${v}</b><span>${l}</span></div>`;
+  const callerNetV=traders.filter(x=>callerSet.has(x.w)).reduce((a,x)=>a+net(x),0);
+  const facts=[
+    fact(fmt(traders.length),`wallets in first ${txs.length} txs`),
+    fact(clusters.length?fmt(inCluster.size):"0","wallets in funding clusters"),
+    fact(peak?fmt(toPeak,0)+" min":"–","launch → price peak"),
+    fact(peakToCrash!==null?fmt(peakToCrash,0)+" min":"–","peak → −90%"),
+    fact(exitVsPeak!==null?(exitVsPeak<=0?fmt(-exitVsPeak,0)+" min before":fmt(exitVsPeak,0)+" min after")+" peak":"–","main insider exit"),
+    fact(crashAfterExit!==null?fmt(crashAfterExit,0)+" min":"–","insider exit → −80%"),
+    fact((insiderNet>=0?"+":"")+fmt(insiderNet)+" SOL","insiders net"),
+    fact(fmt(outsiderNet)+" SOL","everyone else net"),
+    ...(callers.length?[fact((callerNetV>=0?"+":"")+fmt(callerNetV)+" SOL","caller-linked wallets net")]:[])
+  ].join("");
+  const clusterHtml=clusters.length?clusters.map((c,i)=>{
+    const ws=[...c.wallets].map(w=>W[w]||{w,spent:0,got:0,bought:0,sold:0,slot:null});
+    const sp=ws.reduce((a,x)=>a+x.spent,0),gt=ws.reduce((a,x)=>a+x.got,0);
+    return `<div class="cl"><p><b>Cluster ${i+1}</b> · ${ws.length} wallets · funded by ${[...c.funders].map(f=>link(f)+(f===creator?'<span class="tag r">creator</span>':"")).join(" ")}</p>
+    <p class="note">In ${fmt(sp)} SOL · out ${fmt(gt)} SOL · net <span class="${gt-sp>=0?"lo":"hi"}">${fmt(gt-sp)}</span></p>
+    <div class="tbl"><table><tr><th>Wallet</th><th>Role</th><th>SOL in</th><th>SOL out</th><th>Net</th><th>Sold</th></tr>
+    ${ws.map(x=>`<tr><td>${link(x.w)}</td><td>${x.w===creator?"creator":x.slot!==null&&x.slot<=1?"launch slot":x.bought?"buyer":"funder"}</td><td>${fmt(x.spent)}</td><td>${fmt(x.got)}</td><td class="${x.got-x.spent>=0?"lo":"hi"}">${fmt(x.got-x.spent)}</td><td>${x.bought?fmt(Math.min(100,x.sold/x.bought*100),0)+"%":"–"}</td></tr>`).join("")}
+    </table></div>
+    <div class="row"><button class="ghost sm" data-all="${[...c.wallets].join(",")}" data-note="cluster on ${short(mint)}">Add all to case file</button></div></div>`}).join(""):`<p class="note">No shared funding sources found among the ${cand.length} wallets traced.</p>`;
+  const holdHtml=holders.length?`<div class="tbl"><table><tr><th>Wallet</th><th>% of supply</th></tr>${holders.map((h,i)=>`<tr><td>${link(h.owner)} ${i===0&&h.pct>30&&!insiders.has(h.owner)?'<span class="tag">likely bonding curve</span>':tag(h.owner)}</td><td>${fmt(h.pct,2)}%</td></tr>`).join("")}</table></div>`:`<p class="note">Holder data unavailable.</p>`;
+  const profRows=traders.slice().sort((a,b)=>net(b)-net(a)).slice(0,10);
+  const profHtml=`<div class="tbl"><table><tr><th>Wallet</th><th>SOL in</th><th>SOL out</th><th>Net</th><th>First buy</th><th>First sell</th><th>Funded by</th></tr>${profRows.map(x=>`<tr><td>${link(x.w)}${tag(x.w)}</td><td>${fmt(x.spent)}</td><td>${fmt(x.got)}</td><td class="${net(x)>=0?"lo":"hi"}">${fmt(net(x))}</td><td>${x.firstBuy!==null?fmt((x.firstBuy-t0)/60,1)+" min":"–"}</td><td>${x.sells.length?fmt((x.sells[0].t-t0)/60,1)+" min":"holding"}</td><td>${fund[x.w]&&fund[x.w].from?link(fund[x.w].from):fund[x.w]&&fund[x.w].old?"old wallet":"not traced"}</td></tr>`).join("")}</table></div>`;
+  const callerHtml=callers.length?`<h2>Caller wallets</h2>`+callers.map(c=>`<p>${link(c)} <span class="tag r">caller</span> ${W[c]?`traded this coin: in ${fmt(W[c].spent)} SOL, out ${fmt(W[c].got)} SOL`:"did not trade this coin directly"}${fund[c]&&fund[c].from?` · funded by ${link(fund[c].from)}`:fund[c]&&fund[c].old?" · old wallet, funding not traced":""}</p>`).join("")+(callerLinks.length?`<div class="tbl"><table><tr><th>Caller</th><th>Link</th><th>Via</th><th>Wallet</th><th>SOL</th></tr>${callerLinks.map(l=>`<tr><td>${short(l.c)}</td><td>${l.hop===2?"via middle wallet":l.dir}</td><td>${l.via?link(l.via):"–"}</td><td>${link(l.other)}${tag(l.other)}${W[l.other]?'<span class="tag">traded this coin</span>':""}</td><td>${fmt(l.sol)}</td></tr>`).join("")}</table></div><p class="note">Transfers of 0.02+ SOL found in the caller's last ~600 transactions and one hop further out.</p>`:`<p class="note">${noLinkMsg}</p>`):"";
+  const callHtml=call?`<h2>Around the callout</h2><div class="facts">${fact(call.pre,"wallets bought before the call")}${fact(call.fr.length,"of them sold within 20 min after")}${fact(call.frIns.length,"of those are linked wallets")}${fact((call.frNet>=0?"+":"")+fmt(call.frNet)+" SOL","their combined net")}</div>`:"";
+  const ign=ignored.length?`<p class="note">Ignored ${ignored.length} shared funder(s) with 1,000+ transactions (likely exchanges or routers).</p>`:"";
+  shell(mint,"Token",`
+    <p>Creator: ${link(creator)} ${tag(creator)}</p>
+    <div class="facts">${facts}</div>
+    ${callerHtml}${callHtml}
+    <h2>Top profit wallets</h2>${profHtml}
+    <h2>Funding clusters</h2>${clusterHtml}${ign}
+    <h2>Top holders</h2>${holdHtml}
+    <p class="note">Timing and money figures come from the first ${txs.length} transactions${all.length>txs.length?` of ${all.length}${reached?"":"+"}`:""}. Raise "Trades to read" to cover more of the coin's life.</p>`);
+  const dangerSet=[...new Set([...callerSet,...creatorSet])].filter(w=>w!==creator);
+  verdict(score,flags,{kind:"token",main:creator,linked:dangerSet.slice(0,12),note:short(mint),cats,catLabels:{network:"Coordination",money:"Money flow",timing:"Timing"},conf,checks,noData:conf.pct<30,reason:`Confidence is ${conf.label.toLowerCase()} (${conf.pct}%). Too little of this coin was readable to call it clean.`});
+  log("Done.");
+}
+
+/* ================= WALLET CHECK ================= */
+const factBox=(v,l)=>`<div class="fact"><b>${v}</b><span>${l}</span></div>`;
+async function walletStats(addr,pages){
+  const allTx=await walletTxs(addr,pages);
+  const txs=allTx.filter(isPump);
+  const m={},flow={};
+  for(const t of allTx){
+    if(isPump(t))continue;
+    for(const n of (t.nativeTransfers||[])){
+      if(n.amount<20000000||n.fromUserAccount===n.toUserAccount)continue;
+      const other=n.fromUserAccount===addr?n.toUserAccount:n.toUserAccount===addr?n.fromUserAccount:null;
+      if(!other)continue;
+      const f=flow[other]??={sent:0,recv:0};
+      if(n.fromUserAccount===addr)f.sent+=n.amount/LAM;else f.recv+=n.amount/LAM;
+    }
+  }
+  for(const t of txs){
+    const tt=(t.tokenTransfers||[]).filter(x=>x.mint&&x.mint!==WSOL);
+    const mint=tt[0]&&tt[0].mint;if(!mint)continue;
+    const r=m[mint]??={mint,spent:0,got:0,buys:0,sells:0,first:t.timestamp,last:t.timestamp,created:false,firstSell:null};
+    const d=solDelta(t,addr);
+    if(d<0)r.spent+=-d;else r.got+=d;
+    if(tt.some(x=>x.toUserAccount===addr))r.buys++;
+    if(tt.some(x=>x.fromUserAccount===addr)){r.sells++;r.firstSell=Math.min(r.firstSell??Infinity,t.timestamp)}
+    r.first=Math.min(r.first,t.timestamp);r.last=Math.max(r.last,t.timestamp);
+    if(t.feePayer===addr&&(t.type==="CREATE"||t.type==="TOKEN_MINT"||/\b(creat|launch|mint)/i.test(t.description||"")))r.created=true;
+  }
+  const list=Object.values(m).map(r=>({...r,pnl:(r.got-r.spent)/LAM}));
+  list.sort((a,b)=>b.last-a.last);
+  return{txCount:txs.length,allCount:allTx.length,list,flow};
+}
+
+/* Per coin: DexScreener for the pool, GeckoTerminal minute candles (first 12h) and hour candles (lifespan) */
+async function jget(u){const r=await fetch(u);if(!r.ok)throw new Error("HTTP "+r.status);return r.json()}
+async function outcome(r){
+  const d=await jget(`https://api.dexscreener.com/latest/dex/tokens/${r.mint}`);
+  const p=(d.pairs||[]).filter(x=>x.chainId==="solana").sort((a,b)=>(b.liquidity?.usd||0)-(a.liquidity?.usd||0))[0];
+  const o={status:"Dead",offPeak:null,crash:null,crashT:null,exit:null,rise:null,drop80:null,dropT:null,depth:null,fast:false,instant:false,soldBefore:false,held:false,cycle:false,lifeH:null,alive:false,quick:false};
+  if(!p)return o;
+  const now=parseFloat(p.priceUsd),liq=p.liquidity?.usd||0;
+  const born=p.pairCreatedAt?Math.floor(p.pairCreatedAt/1000):r.first;
+  const base=`https://api.geckoterminal.com/api/v2/networks/solana/pools/${p.pairAddress}/ohlcv`;
+  o.status=liq<500?"Dead":"Alive";
+  try{
+    await sleep(2200);
+    const g=await jget(`${base}/minute?aggregate=1&limit=720&before_timestamp=${born+43200}&currency=usd`);
+    const c=(g.data?.attributes?.ohlcv_list||[]).map(x=>({t:x[0],o:+x[1],h:+x[2],l:+x[3],c:+x[4]})).filter(x=>x.t>=born-60).sort((a,b)=>a.t-b.t);
+    if(c.length){
+      /* everything below is measured from the candle where this wallet first traded */
+      const et=Math.floor(r.first/60)*60;
+      let ec=[...c].reverse().find(x=>x.t<=et);
+      if(ec&&et-ec.t>600)ec=null;
+      const from=ec?c.filter(x=>x.t>=ec.t):c;
+      const pk=from.reduce((m,x)=>x.h>m.h?x:m,from[0]);
+      if(ec){const ep=(ec.o+ec.c)/2;if(ep>0)o.rise=pk.h/ep}
+      const cr=from.find(x=>x.t>pk.t&&x.c<=pk.h*.1);
+      if(cr){o.crash=(cr.t-pk.t)/60;o.crashT=cr.t+60}
+      if(r.firstSell)o.exit=(r.firstSell-pk.t)/60;
+      /* collapse speed: first candle after the peak whose low is 80% below it. In the peak candle itself we require the close to sit near the low, so a pump candle is not read as a crash. */
+      const after=from.filter(x=>x.t>=pk.t);
+      const dc=after.find(x=>x.t===pk.t?x.c<=pk.h*.3:x.l<=pk.h*.2);
+      if(dc){o.drop80=(dc.t-pk.t)/60;o.dropT=dc.t}
+      o.depth=Math.max(0,1-Math.min(...after.map(x=>x.l))/pk.h);
+    }
+  }catch{}
+  try{
+    await sleep(2200);
+    const h=await jget(`${base}/hour?aggregate=1&limit=1000&currency=usd`);
+    const hc=(h.data?.attributes?.ohlcv_list||[]).map(x=>({t:x[0],h:+x[2],c:+x[4]})).filter(x=>x.t>=born-3600).sort((a,b)=>a.t-b.t);
+    if(hc.length){
+      const pk=hc.reduce((m,x)=>x.h>m.h?x:m,hc[0]);
+      o.offPeak=Math.max(0,1-now/pk.h);
+      const cr=hc.find(x=>x.t>=pk.t&&x.c<=pk.h*.1);
+      if(cr)o.lifeH=Math.max(0,(cr.t+3600-born)/3600);
+      else{o.alive=true;o.lifeH=Math.max(0,(Date.now()/1000-born)/3600)}
+      if(o.offPeak>=.9)o.status="Dead";else if(o.offPeak>=.5&&o.status!=="Dead")o.status="Weak";
+    }
+  }catch{}
+  o.quick=(o.crash!==null&&o.crash<=30)||(!o.alive&&o.lifeH!==null&&o.lifeH<=1.5);
+  /* fast = lost 80% within ~15 min of the peak; instant = within ~2 min. soldBefore = this wallet's first sell came before or during the drop minute. */
+  o.fast=o.drop80!==null&&o.drop80<=15;
+  o.instant=o.drop80!==null&&o.drop80<=1;
+  o.soldBefore=o.fast&&!!r.firstSell&&r.firstSell<o.dropT+60;
+  o.held=o.fast&&!o.soldBefore;
+  /* rug-like: the coin collapsed fast, this wallet was out first at a net gain, and price had risen after it got in (or it created the coin) */
+  o.cycle=o.fast&&o.soldBefore&&r.got>r.spent&&((o.rise!==null&&o.rise>=2)||!!r.created);
+  return o;
+}
+async function loadOutcomes(list,id){
+  document.querySelectorAll("tr[data-m] td.oc").forEach(td=>td.textContent="–");
+  list.forEach(r=>{const tr=document.querySelector(`tr[data-m="${r.mint}"]`);if(tr)tr.querySelectorAll("td.oc").forEach(td=>td.textContent="…")});
+  const res=[];
+  for(const [i,r] of list.entries()){
+    if(id!==scanId)return null;
+    log(`Checking how long coins lived… ${i+1}/${list.length}`);
+    let o=null;try{o=await outcome(r)}catch{}
+    const tr=document.querySelector(`tr[data-m="${r.mint}"]`);
+    if(tr){
+      const td=tr.querySelectorAll("td.oc");
+      if(!o)td.forEach(x=>x.textContent="n/a");
+      else{
+        const dropTxt=o.drop80===null?"–":(o.drop80===0?"under 1 min":o.drop80===1?"~1-2 min":"~"+fmt(o.drop80,0)+" min")+" · −"+fmt((o.depth||0)*100,0)+"%";
+        let ex="–";
+        if(!r.firstSell)ex="holding";
+        else if(o.dropT!==null){const d=(r.firstSell-o.dropT)/60;ex=d<-1?fmt(-d,0)+" min before":d<1?"same minute":fmt(d,0)+" min after"}
+        td[0].textContent=o.rise===null?"–":fmt(o.rise,1)+"x";
+        td[1].innerHTML=o.fast?`<span class="hi">${dropTxt}</span>`:dropTxt;
+        td[2].textContent=ex;
+        td[3].textContent=o.lifeH===null?"–":o.alive?fmt(o.lifeH,1)+" h, trading":(o.lifeH<1?"under 1 h":fmt(o.lifeH,1)+" h");
+        td[4].innerHTML=o.cycle?'<span class="tag r">RUG-LIKE</span>':o.fast&&o.held?'<span class="tag" style="color:#ffbd00;border-color:#ffbd00">collapsed, held</span>':o.fast?'<span class="tag">collapsed</span>':"–";
+      }
+    }
+    if(o)res.push({r,o});
+  }
+  return res;
+}
+
+/* Crew detection: wallets that keep showing up among the first buyers of this wallet's coins */
+async function crewScan(addr,list,id,max){
+  const pick=list.filter(r=>r.buys>0).slice(0,max);
+  const seen={},info={};let checked=0;
+  for(const [i,r] of pick.entries()){
+    if(id!==scanId)return null;
+    log(`Comparing early buyers… coin ${i+1}/${pick.length}`);
+    try{
+      const {all,reached}=await sigsAll(r.mint,8);
+      if(!reached||!all.length)continue;
+      const txs=(await parseTx(all.slice(-100).reverse().map(s=>s.signature))).sort((a,b)=>a.slot-b.slot);
+      const s0=txs[0].slot;
+      const tr=tradeRows(txs,r.mint);
+      const mine=tr.find(x=>x.w===addr&&x.tok>0);
+      const here={};
+      for(const x of tr){
+        if(x.tok<=0||x.w===addr)continue;
+        const k=here[x.w]??={slot:x.slot-s0};k.slot=Math.min(k.slot,x.slot-s0);
+      }
+      info[r.mint]={buyers:here,mySlot:mine?mine.slot-s0:null,creator:txs[0].feePayer};
+      for(const [w,k] of Object.entries(here)){
+        const o=seen[w]??={w,n:0,same:0};o.n++;if(k.slot<=1)o.same++;
+      }
+      checked++;
+    }catch{}
+  }
+  const need=checked>=4?3:2;
+  const partners=Object.values(seen).filter(x=>x.n>=need).sort((a,b)=>b.n-a.n||b.same-a.same);
+  const pset=new Set(partners.map(p=>p.w));
+  for(const inf of Object.values(info)){
+    inf.crew=Object.keys(inf.buyers).filter(w=>pset.has(w)).length;
+    inf.same=inf.mySlot===null?null:Object.values(inf.buyers).filter(k=>Math.abs(k.slot-inf.mySlot)<=1).length;
+  }
+  return{checked,need,partners,info};
+}
+
+/* Mother-wallet check: does this wallet fund other wallets that trade Pump.fun? */
+async function motherCheck(flow,walletMints,id){
+  const recips=Object.entries(flow).filter(([,f])=>f.sent>=0.05).sort((a,b)=>b[1].sent-a[1].sent).slice(0,8);
+  const out={checked:0,active:[],coordinated:[],sharedPairs:[]};
+  const byMint={};
+  for(const [i,[w,f]] of recips.entries()){
+    if(id!==scanId)return null;
+    log(`Checking wallets this wallet funded… ${i+1}/${recips.length}`);
+    try{
+      const sg=await rpc("getSignaturesForAddress",[w,{limit:1000}]);
+      if(sg.length>=1000)continue;
+      const txs=(await walletTxs(w,1)).filter(isPump);
+      out.checked++;
+      const mints=new Set();
+      for(const t of txs)for(const x of (t.tokenTransfers||[]))if(x.mint&&x.mint!==WSOL)mints.add(x.mint);
+      if(txs.length>=3)out.active.push({w,sent:f.sent,coins:mints.size});
+      for(const m of mints){(byMint[m]??=[]).push(w);if(walletMints.has(m))out.sharedPairs.push({w,mint:m})}
+    }catch{}
+  }
+  out.coordinated=Object.entries(byMint).filter(([,ws])=>ws.length>=2).map(([mint,wallets])=>({mint,wallets}));
+  return out;
+}
+
+async function scanWallet(addr){
+  const id=scanId,N=+$("#wcount").value;
+  const s=await walletStats(addr,5);
+  const hasFlow=Object.keys(s.flow).length>0;
+  if(!s.list.length&&!hasFlow){
+    shell(addr,"Wallet",`<p class="note">No Pump.fun trades and no SOL transfers of 0.02+ found in this wallet's recent history (${s.allCount} transactions read).</p>`);
+    verdict(0,[],{kind:"wallet",noData:true,reason:"Nothing to analyze in the recent history we can read. This wallet may be older, inactive, or use programs we do not read."});
+    log("Done.");return;
+  }
+  const shown=s.list.slice(0,N);
+  shell(addr,"Wallet",`
+    <p class="note">${s.allCount} transactions read: ${s.txCount} on Pump.fun across ${s.list.length} coins. Checking the latest ${shown.length}.</p>
+    <div id="wfacts" class="facts"></div>
+    <div id="evidence"></div>
+    ${shown.length?`<div class="tbl"><table><tr><th>Coin</th><th>Role</th><th>Net SOL</th><th>Rise after entry</th><th>Peak → −80%</th><th>Wallet exit vs drop</th><th>Lifespan</th><th>Entered with</th><th>Verdict</th></tr>
+    ${shown.map(r=>`<tr data-m="${r.mint}"><td><a href="https://pump.fun/coin/${r.mint}" target="_blank" rel="noopener">${short(r.mint)}</a></td><td class="role">${r.created?'<span class="tag r">creator</span>':"trader"}</td><td class="${r.pnl>=0?"lo":"hi"}">${fmt(r.pnl)}</td>${[0,1,2,3].map(()=>'<td class="oc">…</td>').join("")}<td class="ew">…</td><td class="oc">…</td></tr>`).join("")}
+    </table></div>
+    <p class="note">Peak → −80% is measured from the post-entry price peak with one-minute candles, so "under 1 min" is the finest we can see. RUG-LIKE means the coin lost 80% within ~15 minutes of its peak, this wallet had already sold at a net gain, and price had risen after it got in (or it created the coin). "collapsed, held" means it was still holding when the coin dropped.</p>`
+    :`<p class="note">This wallet has no Pump.fun trades of its own. It may only move money for other wallets, so the funding checks below matter most.</p>`}
+    <h2>Linked by SOL transfers</h2><div id="mother"><p class="note">Checking…</p></div>
+    <h2>Recurring crew</h2><div id="crew"><p class="note">Comparing early buyers across this wallet's recent coins…</p></div>`);
+  $("#verdict").innerHTML='<p class="note">Analyzing…</p>';
+
+  const ocs=await loadOutcomes(shown,id);if(!ocs||id!==scanId)return;
+  const crew=await crewScan(addr,shown,id,Math.min(N,8));if(!crew||id!==scanId)return;
+  const empty={checked:0,active:[],coordinated:[],sharedPairs:[]};
+  const mother=hasFlow?await motherCheck(s.flow,new Set(s.list.map(r=>r.mint)),id):empty;if(!mother||id!==scanId)return;
+
+  /* creator roles confirmed from each coin's first transaction */
+  shown.forEach(r=>{
+    const inf=crew.info[r.mint];if(inf&&inf.creator===addr)r.created=true;
+    const rt=document.querySelector(`tr[data-m="${r.mint}"] td.role`);if(rt)rt.innerHTML=r.created?'<span class="tag r">creator</span>':"trader";
+    const td=document.querySelector(`tr[data-m="${r.mint}"] td.ew`);if(td)td.textContent=inf?`${inf.crew} crew · ${inf.same===null?"late entry":inf.same+" same-slot"}`:"–";
+  });
+  const created=s.list.filter(r=>r.created);
+  const infos=Object.values(crew.info);
+
+  /* early buyers of this wallet's coins that exchanged SOL with it */
+  const lb={};
+  for(const inf of infos)for(const w of Object.keys(inf.buyers))if(s.flow[w]){const o=lb[w]??={w,coins:0,sent:s.flow[w].sent,recv:s.flow[w].recv};o.coins++}
+  const linkedBuyers=Object.values(lb).sort((a,b)=>b.coins-a.coins);
+
+  $("#crew").innerHTML=crew.partners.length?`<p class="note">Wallets that bought early in at least ${crew.need} of the ${crew.checked} coins compared. Popular snipers can appear here too, so look at the launch-slot column.</p>
+    <div class="tbl"><table><tr><th>Wallet</th><th>Coins together</th><th>Launch-slot buys</th></tr>${crew.partners.slice(0,20).map(p=>`<tr><td>${link(p.w)}${watched(p.w)?'<span class="tag">case file</span>':""}</td><td>${p.n} of ${crew.checked}</td><td>${p.same}</td></tr>`).join("")}</table></div>
+    <div class="row"><button class="ghost sm" data-all="${crew.partners.slice(0,20).map(p=>p.w).join(",")}" data-note="crew of ${short(addr)}">Add all to case file</button></div>`
+    :`<p class="note">${crew.checked?`No wallet appeared early in ${crew.need}+ of the ${crew.checked} coins compared.`:"Not enough coins with a readable launch to compare."}</p>`;
+
+  $("#mother").innerHTML=
+    (linkedBuyers.length?`<p class="note">Early buyers of this wallet's coins that exchanged 0.02+ SOL with it.</p><div class="tbl"><table><tr><th>Wallet</th><th>Direction</th><th>SOL</th><th>Coins</th></tr>${linkedBuyers.slice(0,15).map(x=>`<tr><td>${link(x.w)}${watched(x.w)?'<span class="tag">case file</span>':""}</td><td>${x.sent>=x.recv?"wallet sent SOL to it":"it sent SOL to wallet"}</td><td>${fmt(Math.max(x.sent,x.recv))}</td><td>${x.coins}</td></tr>`).join("")}</table></div>`:"")
+    +(mother.active.length?`<p class="note" style="margin-top:8px">Wallets this wallet funded that trade Pump.fun:</p><div class="tbl"><table><tr><th>Wallet</th><th>SOL received</th><th>Recent coins</th></tr>${mother.active.map(x=>`<tr><td>${link(x.w)}</td><td>${fmt(x.sent)}</td><td>${x.coins}</td></tr>`).join("")}</table></div>`:"")
+    +(mother.coordinated.length?`<p class="note">${mother.coordinated.length} coin(s) were traded by 2+ of the wallets it funded.</p>`:"")
+    +(!linkedBuyers.length&&!mother.active.length&&!mother.coordinated.length?`<p class="note">${hasFlow?`Followed ${mother.checked} funded wallet(s). None looked like Pump.fun traders, and no early buyer of its coins exchanged SOL with it.`:"No 0.02+ SOL transfers to or from other wallets in its recent history."}</p>`:"");
+
+  /* summary facts + collapse evidence */
+  const fastC=ocs.filter(x=>x.o.fast),inst=ocs.filter(x=>x.o.instant),cycs=ocs.filter(x=>x.o.cycle),held=ocs.filter(x=>x.o.held);
+  const dropMed=median(fastC.map(x=>x.o.drop80));
+  const deadLife=ocs.filter(x=>!x.o.alive&&x.o.lifeH!==null).map(x=>x.o.lifeH);
+  const avgCrew=infos.length?infos.reduce((a,i)=>a+i.crew,0)/infos.length:null;
+  $("#wfacts").innerHTML=[
+    factBox(ocs.length?`${fastC.length} of ${ocs.length}`:"–","coins lost 80% within ~15 min of peak"),
+    factBox(String(inst.length),"collapsed in under ~2 min"),
+    factBox(fastC.length?`${cycs.length} of ${fastC.length}`:"–","fast collapses it exited first, at a gain"),
+    factBox(fastC.length?`${held.length} of ${fastC.length}`:"–","fast collapses it held through"),
+    factBox(dropMed!==null?(dropMed<=1?"under ~2 min":fmt(dropMed,0)+" min"):"–","median peak → −80%"),
+    factBox(deadLife.length?fmt(median(deadLife),1)+" h":"–","median lifespan of dead coins"),
+    factBox(avgCrew!==null?fmt(avgCrew,1):"–","crew wallets per entry (avg)"),
+    factBox(linkedBuyers.length,"early buyers tied by SOL transfers"),
+    factBox(mother.active.length,"funded wallets active on Pump.fun"),
+    factBox(created.length,"coins created by this wallet")
+  ].join("");
+  $("#evidence").innerHTML=ocs.length?`<div class="cl"><p><b>Collapse evidence</b></p>
+    <p class="note">${fastC.length} of ${ocs.length} coins lost 80% within ~15 minutes of their peak (${inst.length} in under ~2 minutes). Median time from peak to −80%: ${dropMed!==null?(dropMed<=1?"under ~2 min":fmt(dropMed,0)+" min"):"n/a"}.</p>
+    <p class="note">This wallet had already sold, at a gain, in ${cycs.length} of those. It was still holding in ${held.length}.</p>
+    ${cycs.length>=2?`<p style="color:var(--red);margin:0">Same shape repeats: price rises after it gets in, it sells, then the coin collapses.</p>`:""}</div>`:"";
+
+  /* score: weighted signals in three groups (see scoreSignals). Fast collapse alone is not scored: most Pump.fun coins die quickly. */
+  const S=[];
+  const sg=(cat,name,w,hit,clean)=>S.push({cat,name,w:w||0,hit:(w||0)>0,text:(w||0)>0?hit:clean});
+  const nLB=linkedBuyers.length,nAct=mother.active.length,nCo=mother.coordinated.length,nSp=mother.sharedPairs.length,nP=crew.partners.length;
+  const strong=crew.partners.filter(p=>p.same>=2).length;
+  const withCrew=infos.filter(i=>i.crew>=2).length;
+  const cyc=ocs.filter(x=>x.o.cycle);
+  const nearPeak=cyc.filter(x=>x.o.exit!==null&&Math.abs(x.o.exit)<=10).length;
+  const devQuick=created.filter(r=>r.firstSell&&(r.firstSell-r.first)<=1800).length;
+  const madeQuick=ocs.filter(x=>x.r.created&&x.o.fast).length;
+  sg("network","Funds or is paid by its buyers",nLB>=3?.55:nLB===2?.40:nLB===1?.20:0,`${nLB} early buyer(s) of its coins exchanged SOL with this wallet.`,"No early buyer of its coins exchanged SOL with this wallet.");
+  sg("network","Mother wallet",nAct>=3?.25:nAct===2?.12:0,`It funded ${nAct} wallets that trade Pump.fun.`,`It funded ${nAct} wallet(s) that trade Pump.fun.`);
+  sg("network","Funded wallets trade the same coins",nCo>=2?.30:nCo===1?.10:0,`${nCo} coin(s) were traded by 2+ wallets it funded.`,"Wallets it funded do not trade the same coins.");
+  sg("network","Funded wallets traded its coins",nSp>=2?.25:nSp===1?.08:0,`${nSp} funded-wallet trade(s) happened in coins this wallet also traded.`,"Wallets it funded did not trade its coins.");
+  sg("network","Recurring crew",nP>=3?.40:nP>=1?.18:0,`${nP} wallet(s) bought early in ${crew.need}+ of ${crew.checked} coins this wallet traded.`,`No wallet appeared early in ${crew.need}+ of the ${crew.checked} coins compared.`);
+  sg("network","Same-slot partners",strong>=3?.20:strong>=1?.12:0,`${strong} partner(s) repeatedly bought in the launch slot.`,"No recurring partner repeatedly bought in the launch slot.");
+  sg("network","Enters with a crew",withCrew>=5?.18:withCrew>=3?.12:0,`In ${withCrew} coins this wallet entered alongside 2+ of its recurring partners.`,"It did not repeatedly enter alongside the same partners.");
+  const nC=cyc.length;
+  sg("behavior","Exits before fast collapses",nC>=4?.50:nC===3?.42:nC===2?.28:nC===1?.10:0,`In ${nC} of ${ocs.length} coins the price lost 80% within ~15 min of its peak and this wallet had already sold at a gain.`,`No coin among the ${ocs.length} checked collapsed fast with this wallet already out at a gain.`);
+  sg("behavior","Instant collapses",inst.length>=4?.28:inst.length>=2?.16:inst.length===1?.06:0,`${inst.length} coin(s) lost 80% in under ~2 minutes after their peak.`,"No coin lost 80% in under ~2 minutes after its peak.");
+  sg("behavior","Fast collapses are common",(ocs.length>=5&&fastC.length/ocs.length>=.5)?.15:0,`${fastC.length} of ${ocs.length} coins lost 80% within ~15 min of their peak.`,`${fastC.length} of ${ocs.length} coins lost 80% within ~15 min of their peak.`);
+  const sellers=fastC.filter(x=>x.r.firstSell),outFirst=sellers.filter(x=>x.o.soldBefore).length;
+  sg("behavior","Always out before the drop",(sellers.length>=3&&outFirst/sellers.length>=.8)?.20:0,`In ${outFirst} of ${sellers.length} fast collapses where this wallet sold, it was out before or during the drop.`,"It was not consistently out before the drops.");
+  sg("behavior","Sells at the top",(cyc.length>=2&&nearPeak>=3)?.20:(cyc.length>=2&&nearPeak>=2)?.15:0,`In ${nearPeak} of those cycles it sold within 10 minutes of the peak.`,"No repeated sells within 10 minutes of the peak.");
+  sg("creator","Serial launcher",created.length>=6?.15:created.length>=3?.10:0,`${created.length} coins created by this wallet recently.`,`${created.length} coin(s) created by this wallet recently.`);
+  sg("creator","Creator sells right after launch",devQuick>=2?.35:devQuick===1?.10:0,`In ${devQuick} coin(s) it created, the first sell came within 30 minutes of launch.`,"It did not sell its own coins within 30 minutes of launch.");
+  sg("creator","Created coins that collapse fast",madeQuick>=3?.38:madeQuick===2?.30:madeQuick===1?.10:0,`${madeQuick} coin(s) this wallet created lost 80% within ~15 min of their peak.`,"None of its created coins lost 80% within ~15 min of their peak.");
+  const bagholder=fastC.length>=3&&held.length/fastC.length>=.6;
+  const {score,cat:cats}=scoreSignals(S,bagholder?{behavior:.5}:{});
+  const flags=S.filter(x=>x.hit).sort((a,b)=>b.w-a.w).map(x=>[x.name,x.text,x.w>=.3?"hi":x.w>=.12?"md":"lo",Math.round(x.w*100)]);
+  const checks=S.filter(x=>!x.hit).map(x=>[x.name,x.text]);
+  if(bagholder)flags.push(["Often caught in the collapses",`This wallet was still holding in ${held.length} of ${fastC.length} fast collapses, which looks more like a victim than a seller. Behavior score halved.`,"lo"]);
+
+  /* confidence: how much of this wallet we could actually look at. Never call it SAFE on thin data. */
+  const covP=Math.min(1,ocs.length/8),covC=Math.min(1,crew.checked/5),covF=hasFlow?Math.min(1,mother.checked/4):.6,covS=Math.min(1,s.list.length/8);
+  const conf=confidence(.35*covP+.3*covC+.15*covF+.2*covS);
+  const weak=conf.pct<30||(s.list.length<3&&!mother.checked);
+  const coverage=`Price history for ${ocs.length} coin(s), early buyers compared on ${crew.checked}, ${mother.checked} funded wallet(s) followed.`;
+  const linked=[...new Set([...crew.partners.map(p=>p.w),...linkedBuyers.map(x=>x.w),...mother.active.map(x=>x.w)])].slice(0,12);
+  verdict(score,flags,{kind:"wallet",main:addr,linked,note:"wallet "+short(addr),cats,catLabels:{network:"Coordination",behavior:"Behavior",creator:"Creator"},conf,checks,noData:weak,coverage,reason:`Confidence is ${conf.label.toLowerCase()} (${conf.pct}%). ${coverage} That is too little to call this wallet clean. It may trade through other wallets or use programs we do not read.`});
+  log("Done.");
+}
+
+/* ---------- Run ---------- */
+async function run(fn,src){
+  const a=$(src).value.trim();
+  if(!KEY){log("Add your Helius API key first.");return}
+  if(!/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(a)){log("That doesn't look like a Solana address.");return}
+  scanId++;
+  $("#bW").disabled=$("#bT").disabled=true;$("#out").innerHTML="";
+  try{await fn(a)}catch(e){log("Error: "+e.message)}
+  $("#bW").disabled=$("#bT").disabled=false;
+}
+$("#bT").onclick=()=>run(scanToken,"#addr");
+$("#bW").onclick=()=>run(scanWallet,"#waddr");
+function tab(w){
+  scanId++;
+  $("#paneT").hidden=w;$("#paneW").hidden=!w;
+  $("#tabT").setAttribute("aria-selected",String(!w));$("#tabW").setAttribute("aria-selected",String(w));
+  $("#out").innerHTML="";log("");
+}
+$("#tabT").onclick=()=>tab(false);
+$("#tabW").onclick=()=>tab(true);
+renderWL();
+</script>
+</body>
+</html>
